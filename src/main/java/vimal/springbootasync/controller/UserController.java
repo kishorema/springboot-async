@@ -1,38 +1,33 @@
 package vimal.springbootasync.controller;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.List;
 import org.springframework.web.bind.annotation.*;
 import vimal.springbootasync.model.UserDto;
 import vimal.springbootasync.service.UserService;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("user")
 public class UserController {
 
-    private final static Logger LOG = LoggerFactory.getLogger(UserController.class);
+  final UserService userService;
 
+  public UserController(UserService userService) {
+    this.userService = userService;
+  }
 
-    @Autowired
-    UserService userService;
+  @PostMapping("/create")
+  public UserDto create(@RequestBody UserDto user) {
+    return userService.createUser(user);
+  }
 
-    @PostMapping("/create")
-    public UserDto create(@RequestBody UserDto user) {
-       return userService.createUser(user);
-    }
+  @GetMapping("/id/{id}")
+  @ResponseBody
+  public UserDto getUser(@PathVariable Integer id) {
+    return userService.getUserById(id);
+  }
 
-    @GetMapping("/id/{id}")
-    @ResponseBody
-    public UserDto getUser(@PathVariable Integer id) {
-        return userService.getUserById(id);
-    }
-
-    @GetMapping("/name/{firstName}")
-    @ResponseBody
-    public List<UserDto> getUserByName(@PathVariable String firstName) {
-        return userService.getUserByName(firstName);
-    }
+  @GetMapping("/name/{lastName}")
+  public List<UserDto> getUserByName(@PathVariable String lastName) {
+    return userService.getUserByName(lastName);
+  }
 }
